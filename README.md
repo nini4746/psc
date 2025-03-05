@@ -57,6 +57,7 @@ sa, sb, ss, pa, pb, ra, rb, rr, rra, rrb, rrr
 
 ## ⚠️ Notes
 - Ensure `push_swap` is compiled and executable before running the script.
+- The push_swap program must return 0 if sorting was successful and 1 if sorting failed.
 - Mac users might need `brew install coreutils` to use `gshuf` instead of `shuf`.
 
 ## 📢 Contributing
