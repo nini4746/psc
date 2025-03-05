@@ -57,6 +57,7 @@ sa, sb, ss, pa, pb, ra, rb, rr, rra, rrb, rrr
 
 ## ⚠️ 참고 사항
 - 스크립트를 실행하기 전에 `push_swap`을 컴파일하고 실행 가능하게 설정해야 합니다.
+- push_swap 프로그램은 정렬이 성공하면 0, 실패하면 1을 반환해야 합니다.
 - Mac 사용자는 `brew install coreutils`를 실행하여 `gshuf`를 설치해야 할 수도 있습니다.
 
 ## 📢 기여하기
