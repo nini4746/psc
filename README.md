@@ -1,5 +1,4 @@
-# push_swap Test Script
-
+# push_swap_checker
 ## 📌 Overview
 This script runs multiple tests on the `push_swap` program by generating random numbers, executing the program, and evaluating its output based on sorting correctness and command efficiency.
 
