@@ -1,65 +1,67 @@
-#!/bin/bash
+# push_swap Test Script
 
-# Check parameters
-if [ "$#" -ne 3 ]; then
-    echo "Usage: $0 <n (number of values)> <mode> <TARGET_LINES>"
-    echo "mode: 1 (space-separated) | 2 (string argument)"
-    exit 1
-fi
+## 📌 Overview
+This script runs multiple tests on the `push_swap` program by generating random numbers, executing the program, and evaluating its output based on sorting correctness and command efficiency.
 
-# Number of values, mode selection, and target line count
-n=$1
-mode=$2
-TARGET_LINES=$3
+## 🚀 Usage
+```
+./test_push_swap.sh <n (number of values)> <mode> <TARGET_LINES>
+```
 
-COUNT_EXCEED=0  # Count of exceeding target lines
-COUNT_FAIL=0    # Count of sorting failures
-TOTAL_RUNS=10000  # Number of iterations
+### Parameters
+- **n** (integer): Number of values to generate for sorting.
+- **mode** (integer):
+  - `1`: Space-separated numbers as arguments to `push_swap`
+  - `2`: Numbers passed as a single string argument
+- **TARGET_LINES** (integer): The threshold number of lines to check efficiency.
 
-# Determine the appropriate shuffle command based on OS
-if command -v gshuf &> /dev/null; then
-    SHUF_CMD="gshuf"
-else
-    SHUF_CMD="shuf"
-fi
+### Example Usage
+#### Run a test with 5 numbers, mode 1, and check if commands exceed 12 lines:
+```
+./test_push_swap.sh 5 1 12
+```
 
-echo "🔍 Running $TOTAL_RUNS iterations to check sorting failures and cases exceeding $TARGET_LINES lines..."
+## 🛠️ How It Works
+1. **Random Number Generation**
+   - Generates `n` random numbers within the range of 1-10000.
+   - Uses `shuf` (or `gshuf` on macOS) to generate randomness.
 
-VALID_COMMANDS=("sa" "sb" "ss" "pa" "pb" "ra" "rb" "rr" "rra" "rrb" "rrr")
+2. **Executing `push_swap`**
+   - Calls `./push_swap` with the generated numbers based on the selected mode.
+   - Captures the output of the command sequence.
 
-for ((i=1; i<=TOTAL_RUNS; i++)); do
-    numbers=$($SHUF_CMD -i 1-10000 -n $n | tr '\n' ' ')  # Generate random numbers
+3. **Validation Checks**
+   - If `push_swap` returns an error, it is counted as a **sorting failure**.
+   - If the output contains **valid commands only**, it counts the number of lines.
+   - If the line count exceeds `TARGET_LINES`, it is counted as an **inefficient case**.
 
-    # Change push_swap execution method based on mode
-    if [ "$mode" -eq 1 ]; then
-        output=$(./push_swap $numbers)
-    elif [ "$mode" -eq 2 ]; then
-        output=$(./push_swap "$numbers")
-    else
-        echo "❌ Invalid mode. Choose 1 or 2."
-        exit 1
-    fi
+4. **Progress & Summary**
+   - Progress updates every 100 iterations.
+   - After `TOTAL_RUNS=10000`, a final summary is displayed.
 
-    # Check push_swap return value
-    EXIT_CODE=$?
-    if [ "$EXIT_CODE" -ne 0 ]; then
-        ((COUNT_FAIL++))  # Increase sorting failure count
-    else
-        # Only count valid commands
-        line_count=$(echo "$output" | grep -E "^($(IFS='|'; echo "${VALID_COMMANDS[*]}")$)" | wc -l)
-        if [ "$line_count" -ge "$TARGET_LINES" ]; then
-            ((COUNT_EXCEED++))
-        fi
-    fi
+## 🔍 Valid Commands Considered
+The script only counts valid `push_swap` operations:
+```
+sa, sb, ss, pa, pb, ra, rb, rr, rra, rrb, rrr
+```
 
-    # Display progress
-    if (( i % 100 == 0 )); then
-        echo "✅ Progress: $i/$TOTAL_RUNS (Sorting failures: $COUNT_FAIL, Exceeded cases: $COUNT_EXCEED)"
-    fi
+## 📊 Output Example
+```
+🔍 Running 10000 iterations to check sorting failures and cases exceeding 12 lines...
+✅ Progress: 1000/10000 (Sorting failures: 3, Exceeded cases: 125)
+✅ Progress: 2000/10000 (Sorting failures: 7, Exceeded cases: 278)
+...
+🎯 Test completed!
+📌 Sorting failures: 42 out of 10000 runs
+📌 Cases exceeding 12 lines: 1320 out of 10000 runs
+```
 
-done
+## ⚠️ Notes
+- Ensure `push_swap` is compiled and executable before running the script.
+- Mac users might need `brew install coreutils` to use `gshuf` instead of `shuf`.
 
-# Print final results
-echo "🎯 Test completed!"
-echo "📌 Sorting failures: $COUNT_FAIL out of $TOTAL_RUNS runs"
-echo "📌 Cases exceeding $TARGET_LINES lines: $COUNT_EXCEED out of $TOTAL_RUNS runs"
+## 📢 Contributing
+Feel free to submit issues or suggestions to improve this script!
+
+---
+© 2025 push_swap Performance Testing Script
